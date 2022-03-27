@@ -4,6 +4,22 @@
 #include <ctype.h>
 #include "list.h"
 
+typedef struct
+{
+    char* NombreLista;
+    List* CancionesLista;
+    size_t Cantidad;
+} ListaReproduccion;
+
+typedef struct 
+{
+    char Nombre [100];
+    char Artista [100];
+    List* Generos;
+    int Anio;
+    ListaReproduccion* ListaReproduccion;
+} Cancion;
+
 int main()
 {
     int option = 0;
