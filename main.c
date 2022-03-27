@@ -20,8 +20,14 @@ typedef struct
     ListaReproduccion* ListaReproduccion;
 } Cancion;
 
+List *ListaGlobalCanciones;
+List *ListaGlobalListasReproduccion;
+
 int main()
 {
+    ListaGlobalCanciones = createList();
+    ListaGlobalListasReproduccion = createList();
+
     int option = 0;
 
     while(option != 11)
