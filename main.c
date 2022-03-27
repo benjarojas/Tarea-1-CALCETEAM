@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "list.h"
+#include "list.c"
 
 typedef struct
 {
@@ -20,6 +20,11 @@ typedef struct
     ListaReproduccion* ListaReproduccion;
 } Cancion;
 
+void eliminarCancion(char *nombre, char *artista, int anio);
+void mostrarListasReproduccion();
+void mostrarCancionesPorLista(char *nombre);
+void mostrarInfoCancion(Cancion *cancion);
+
 List *ListaGlobalCanciones;
 List *ListaGlobalListasReproduccion;
 
@@ -28,6 +33,9 @@ int main()
     ListaGlobalCanciones = createList();
     ListaGlobalListasReproduccion = createList();
 
+    char nombre[100];
+    char artista[100];
+    int anio;
     int option = 0;
 
     while(option != 11)
@@ -46,6 +54,7 @@ int main()
 
         printf("Ingrese una opcion: ");
         scanf("%d", &option);
+        getchar();
 
         switch(option)
         {
@@ -55,14 +64,115 @@ int main()
             case 4: break;  // Buscar por nombre
             case 5: break;  // Buscar por artista
             case 6: break;  // Buscar por genero
-            case 7: break;  // Eliminar cancion
-            case 8: break;  // Mostrar nombres listas
-            case 9: break;  // Mostrar canciones lista
-            case 10: break; // Mostrar todas las canciones
-            
+            case 7: // Eliminar cancion
+                printf("Ingrese el nombre de la canción: ");
+                scanf("%[^\n]", nombre);
+                getchar();
+                printf("Ingrese el artista de la canción: ");
+                scanf("%[^\n]", artista);
+                getchar();
+                printf("Ingrese el año de la canción: ");
+                scanf("%d", &anio);
+                getchar();
+                eliminarCancion(nombre, artista, anio);
+                break;
+            case 8: // Mostrar nombres listas
+                mostrarListasReproduccion();
+                break;  
+            case 9: // Mostrar canciones lista
+                printf("Ingrese el nombre de la lista: ");
+                scanf("%[^\n]", nombre);
+                getchar();
+                mostrarCancionesPorLista(nombre);
+                break; 
+            case 10: break; // Mostrar todas las canciones      
             case 11: exit(EXIT_SUCCESS); // Salir de la aplicacion
         }
     }
     
     return 0;
+}
+
+void eliminarCancion(char *nombre, char *artista, int anio)
+{
+    int contador = 0;
+    Cancion *cancion = firstList(ListaGlobalCanciones);
+    while(cancion)
+    {
+        if(strcmp(cancion->Nombre, nombre) && strcmp(cancion->Artista, artista) && cancion->Anio == anio)
+        {
+            ListaReproduccion *listaReproduccion = cancion->ListaReproduccion;
+            List *listaCanciones = listaReproduccion->CancionesLista;
+            Cancion *aux = firstList(listaCanciones);
+            while(aux)
+            {
+                if(aux == cancion)
+                {
+                    popCurrent(ListaGlobalCanciones);
+                    popCurrent(listaCanciones);
+                    listaReproduccion->Cantidad--;
+                    contador++;
+                    break;
+                }
+                aux = nextList(listaCanciones);
+            }
+        }
+        cancion = nextList(ListaGlobalCanciones);
+    }
+
+    if(contador == 0) // La canción ingresada no existe
+    {
+        printf("No se encontraron canciones\n\n");
+    }
+}
+
+void mostrarListasReproduccion()
+{
+    ListaReproduccion *listaReproduccion = firstList(ListaGlobalListasReproduccion);
+    while(listaReproduccion)
+    {
+        printf("%s, %zd\n", listaReproduccion->NombreLista, listaReproduccion->Cantidad);
+        listaReproduccion = nextList(ListaGlobalListasReproduccion);
+    }
+    printf("\n");
+}
+
+void mostrarCancionesPorLista(char *nombre)
+{
+    int contador = 0;
+    ListaReproduccion *listaReproduccion = firstList(ListaGlobalListasReproduccion);
+    while(listaReproduccion)
+    {
+        if(strcmp(listaReproduccion->NombreLista, nombre) == 0)
+        {
+            List *listaCanciones = listaReproduccion->CancionesLista;
+            Cancion *cancion = firstList(listaCanciones);
+            while(cancion)
+            {
+                mostrarInfoCancion(cancion);
+                cancion = nextList(listaCanciones);
+            }
+            break;
+        }
+        listaReproduccion = nextList(ListaGlobalListasReproduccion);
+    }
+
+    if(contador == 0) // La lista no existe
+    {
+        printf("No se encontró la lista de reproducción\n\n");
+    }
+}
+
+void mostrarInfoCancion(Cancion *cancion)
+{
+    printf("%s, %s,", cancion->Nombre, cancion->Artista);
+
+    List *listaGeneros = cancion->Generos;
+    char *genero = firstList(listaGeneros);
+    while(genero)
+    {
+        printf(" %s", genero);
+    }
+
+    printf(", %d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
 }
