@@ -25,6 +25,8 @@ void mostrarListasReproduccion();
 void mostrarCancionesPorLista(char *nombre);
 void mostrarInfoCancion(Cancion *cancion);
 
+void nuevaCancion();
+
 List *ListaGlobalCanciones;
 List *ListaGlobalListasReproduccion;
 
@@ -60,7 +62,9 @@ int main()
         {
             case 1: break;  // Importar canciones
             case 2: break;  // Exportar canciones
-            case 3: break;  // Agregar cancion
+            case 3:
+                nuevaCancion();
+                break;  // Agregar cancion
             case 4: break;  // Buscar por nombre
             case 5: break;  // Buscar por artista
             case 6: break;  // Buscar por genero
@@ -91,6 +95,48 @@ int main()
     }
     
     return 0;
+}
+
+void nuevaCancion()
+{
+    char* generos = (char *) malloc(30*sizeof(char));
+
+    Cancion* nuevaCancion = NULL;
+
+    nuevaCancion = (Cancion *) malloc(sizeof(Cancion));
+
+    char nombreCancion[30];
+    char artistaCancion[30];
+    int anioCancion;
+    int x;
+
+    fflush(stdin);
+    printf("Ingrese el nombre de la cancion: ");
+    scanf("%[^\n]s", nombreCancion);
+
+    strcpy(nuevaCancion->Nombre, nombreCancion);
+
+    fflush(stdin);
+    printf("Ingrese el artista de la cancion: ");
+    scanf("%[^\n]s", artistaCancion);
+
+    strcpy(nuevaCancion->Artista, artistaCancion);
+
+    fflush(stdin);
+    nuevaCancion->Generos = createList();
+    printf("Ingrese el/los genero(s) de la cancion: ");
+    scanf("%[^\n]s", generos);
+
+    pushBack(nuevaCancion->Generos, generos);
+
+    fflush(stdin);
+    printf("Ingrese el anio de la cancion: ");
+    scanf("%d", &anioCancion);
+
+    nuevaCancion->Anio = anioCancion;
+
+    pushBack(ListaGlobalCanciones, nuevaCancion);
+
 }
 
 void eliminarCancion(char *nombre, char *artista, int anio)
