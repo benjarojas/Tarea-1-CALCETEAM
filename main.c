@@ -172,6 +172,7 @@ void mostrarInfoCancion(Cancion *cancion)
     while(genero)
     {
         printf(" %s", genero);
+        genero = nextList(listaGeneros);
     }
 
     printf(", %d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
