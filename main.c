@@ -50,13 +50,13 @@ int main()
     {
         printf("1.-  Importar canciones desde un archivo CSV\n");
         printf("2.-  Exportar canciones CSV\n");
-        printf("3.-  Agregar cancion\n");
-        printf("4.-  Buscar cancion por nombre\n");
+        printf("3.-  Agregar cancion\n"); // Funcionando
+        printf("4.-  Buscar cancion por nombre\n"); // Funcionando
         printf("5.-  Buscar cancion por artista\n");
         printf("6.-  Buscar cancion por genero\n");
-        printf("7.-  Eliminar cancion\n");
-        printf("8.-  Mostrar nombres de las listas de reproduccion\n");
-        printf("9.-  Mostrar una lista de reproduccion\n");
+        printf("7.-  Eliminar cancion\n"); // Funcionando
+        printf("8.-  Mostrar nombres de las listas de reproduccion\n"); // Funcionando
+        printf("9.-  Mostrar una lista de reproduccion\n"); // Funcionando
         printf("10.- Mostrar todas las canciones\n");
         printf("11.- Salir\n\n");
 
@@ -79,9 +79,7 @@ int main()
                 if(resultadoBusqueda != NULL)
                 {
                     printf("Cancion encontrada: \n");
-                    printf("Nombre: %s\n", resultadoBusqueda->Nombre);
-                    printf("Artista: %s\n", resultadoBusqueda->Artista);
-                    printf("Anio: %d\n", resultadoBusqueda->Anio);
+                    mostrarInfoCancion(resultadoBusqueda);
                 } else {
                     printf("No se encontro la cancion\n");
                 }
