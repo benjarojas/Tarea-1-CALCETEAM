@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "list.c"
+#include "list.h"
 
 typedef struct
 {
@@ -20,6 +20,7 @@ typedef struct
     ListaReproduccion* ListaReproduccion;
 } Cancion;
 
+void agregarCancion();
 void eliminarCancion(char *nombre, char *artista, int anio);
 void mostrarListasReproduccion();
 void mostrarCancionesPorLista(char *nombre);
@@ -27,7 +28,8 @@ void mostrarInfoCancion(Cancion *cancion);
 
 ListaReproduccion *buscarListaReproduccion(char *nombre);
 ListaReproduccion *crearListaReproduccion(char *nombre);
-void nuevaCancion();
+
+Cancion* buscarCancionNombre(char *nombre);
 
 List *ListaGlobalCanciones;
 List *ListaGlobalListasReproduccion;
@@ -41,6 +43,8 @@ int main()
     char artista[100];
     int anio;
     int option = 0;
+
+    Cancion* resultadoBusqueda;
 
     while(option != 11)
     {
@@ -65,19 +69,33 @@ int main()
             case 1: break;  // Importar canciones
             case 2: break;  // Exportar canciones
             case 3:
-                nuevaCancion();
+                agregarCancion();
                 break;  // Agregar cancion
-            case 4: break;  // Buscar por nombre
+            case 4:
+                fflush(stdin);
+                printf("Ingrese el nombre de la cancion: ");
+                scanf("%[^\n]", nombre);
+                resultadoBusqueda = buscarCancionNombre(nombre);
+                if(resultadoBusqueda != NULL)
+                {
+                    printf("Cancion encontrada: \n");
+                    printf("Nombre: %s\n", resultadoBusqueda->Nombre);
+                    printf("Artista: %s\n", resultadoBusqueda->Artista);
+                    printf("Anio: %d\n", resultadoBusqueda->Anio);
+                } else {
+                    printf("No se encontro la cancion\n");
+                }
+                break;  // Buscar por nombre
             case 5: break;  // Buscar por artista
             case 6: break;  // Buscar por genero
             case 7: // Eliminar cancion
-                printf("Ingrese el nombre de la canción: ");
+                printf("Ingrese el nombre de la cancion: ");
                 scanf("%[^\n]", nombre);
                 fflush(stdin);
-                printf("Ingrese el artista de la canción: ");
+                printf("Ingrese el artista de la cancion: ");
                 scanf("%[^\n]", artista);
                 fflush(stdin);
-                printf("Ingrese el año de la canción: ");
+                printf("Ingrese el año de la cancion: ");
                 scanf("%d", &anio);
                 fflush(stdin);
                 eliminarCancion(nombre, artista, anio);
@@ -99,18 +117,18 @@ int main()
     return 0;
 }
 
-void nuevaCancion()
+void agregarCancion()
 {
-    char* generos = (char *) malloc(30*sizeof(char));
-
     Cancion* nuevaCancion = NULL;
 
-    nuevaCancion = (Cancion *) malloc(sizeof(Cancion));
-
+    char* generos = NULL;
     char nombreCancion[100];
     char artistaCancion[100];
-    int anioCancion;
     char nombreLista[100];
+    int anioCancion;
+
+    nuevaCancion = (Cancion *) malloc(sizeof(Cancion));
+    generos = (char *) malloc(100*sizeof(char));
 
     fflush(stdin);
     printf("Ingrese el nombre de la cancion: ");
@@ -124,6 +142,9 @@ void nuevaCancion()
 
     strcpy(nuevaCancion->Artista, artistaCancion);
 
+
+    // Creamos una lista en caso de que sea mas de 1 genero
+    // falta implementar un algoritmo para separar por comas
     fflush(stdin);
     nuevaCancion->Generos = createList();
     printf("Ingrese el/los genero(s) de la cancion: ");
@@ -152,6 +173,20 @@ void nuevaCancion()
     pushBack(listaReproduccion->CancionesLista, nuevaCancion);
     pushFront(ListaGlobalCanciones, nuevaCancion);
     printf("\n");
+}
+
+Cancion* buscarCancionNombre(char *nombre)
+{
+    Cancion *aux = firstList(ListaGlobalCanciones); 
+    while(aux != NULL)
+    {
+        if(strcmp(aux->Nombre, nombre) == 0)
+        {
+            return aux;
+        }
+        aux = nextList(ListaGlobalCanciones);
+    }
+    return NULL;
 }
 
 ListaReproduccion *buscarListaReproduccion(char *nombre)
