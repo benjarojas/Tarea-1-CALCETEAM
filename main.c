@@ -184,7 +184,7 @@ void eliminarCancion(char *nombre, char *artista, int anio)
     Cancion *cancion = firstList(ListaGlobalCanciones);
     while(cancion)
     {
-        if(strcmp(cancion->Nombre, nombre) && strcmp(cancion->Artista, artista) && cancion->Anio == anio)
+        if(strcmp(cancion->Nombre, nombre) == 0 && strcmp(cancion->Artista, artista) == 0 && cancion->Anio == anio)
         {
             ListaReproduccion *listaReproduccion = cancion->ListaReproduccion;
             List *listaCanciones = listaReproduccion->CancionesLista;
@@ -207,8 +207,9 @@ void eliminarCancion(char *nombre, char *artista, int anio)
 
     if(contador == 0) // La canción ingresada no existe
     {
-        printf("No se encontraron canciones\n\n");
+        printf("No se encontraron canciones\n");
     }
+    printf("\n");
 }
 
 void mostrarListasReproduccion()
