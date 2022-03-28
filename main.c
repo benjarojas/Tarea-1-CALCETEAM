@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include "list.c"
+#include "list.h"
 
 typedef struct
 {
@@ -21,6 +21,7 @@ typedef struct
     ListaReproduccion* ListaReproduccion;
 } Cancion;
 
+void exportarCanciones(char *nombreArchivo);
 void agregarCancion();
 void eliminarCancion(char *nombre, char *artista, int anio);
 void mostrarListasReproduccion();
@@ -59,7 +60,7 @@ int main()
         printf("7.-  Eliminar cancion\n"); // Funcionando
         printf("8.-  Mostrar nombres de las listas de reproduccion\n"); // Funcionando
         printf("9.-  Mostrar una lista de reproduccion\n"); // Funcionando
-        printf("10.- Mostrar todas las canciones\n");
+        printf("10.- Mostrar todas las canciones\n"); // Funcionando
         printf("11.- Salir\n\n");
 
         printf("Ingrese una opcion: ");
@@ -69,7 +70,12 @@ int main()
         switch(option)
         {
             case 1: break;  // Importar canciones
-            case 2: break;  // Exportar canciones
+            case 2: // Exportar canciones
+                fflush(stdin);
+                printf("Ingrese el nombre del archivo: ");
+                scanf("%[^\n]", nombre);
+                exportarCanciones(nombre);
+                break;
             case 3:
                 agregarCancion();
                 break;  // Agregar cancion
@@ -117,6 +123,59 @@ int main()
     }
     
     return 0;
+}
+
+void exportarCanciones(char *nombreArchivo)
+{
+    FILE *archivo = fopen(nombreArchivo, "w");
+    if(!archivo)
+    {
+        printf("No se pudo crear el archivo\n");
+        return;
+    }
+
+    Cancion *cancion = firstList(ListaGlobalCanciones);
+    while(cancion)
+    {
+        fprintf(archivo, "%s, %s, ", cancion->Nombre, cancion->Artista);
+
+        List *listaGeneros = cancion->Generos;
+        char generos[100];
+        char *aux = firstList(listaGeneros);
+        bool masDeUno = false; // Si hay más de un género se agregan comillas al inicio y al final
+
+        strcpy(generos, "");
+        while(aux)
+        {
+            strcat(generos, aux);
+            aux = nextList(listaGeneros);
+            if(aux)
+            {
+                strcat(generos, ", ");
+                masDeUno = true;
+            }
+        }
+
+        if(masDeUno)
+        {
+            char copiaGeneros[100];
+            strcpy(copiaGeneros, "\"");
+            strcat(copiaGeneros, generos);
+            strcat(copiaGeneros, "\"\0");
+            fprintf(archivo, "%s, ", copiaGeneros);
+        }
+        else
+        {
+            fprintf(archivo, "%s, ", generos);
+        }
+
+        fprintf(archivo, "%d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
+
+        cancion = nextList(ListaGlobalCanciones);
+    }
+
+    fclose(archivo);
+    printf("\n");
 }
 
 void agregarCancion()
