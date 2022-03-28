@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "list.h"
+#include "list.c"
 
 typedef struct
 {
@@ -25,6 +25,7 @@ void eliminarCancion(char *nombre, char *artista, int anio);
 void mostrarListasReproduccion();
 void mostrarCancionesPorLista(char *nombre);
 void mostrarInfoCancion(Cancion *cancion);
+void mostrarCanciones();
 
 ListaReproduccion *buscarListaReproduccion(char *nombre);
 ListaReproduccion *crearListaReproduccion(char *nombre);
@@ -107,7 +108,9 @@ int main()
                 fflush(stdin);
                 mostrarCancionesPorLista(nombre);
                 break; 
-            case 10: break; // Mostrar todas las canciones      
+            case 10: // Mostrar todas las canciones
+                mostrarCanciones();
+                break;       
             case 11: exit(EXIT_SUCCESS); // Salir de la aplicacion
         }
     }
@@ -297,4 +300,13 @@ void mostrarInfoCancion(Cancion *cancion)
     }
 
     printf(", %d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
+}
+
+void mostrarCanciones() {
+    Cancion *cancion = firstList(ListaGlobalCanciones);
+    while(cancion) {
+        mostrarInfoCancion(cancion);
+        cancion = nextList(ListaGlobalCanciones);
+    }
+    printf("\n");
 }
