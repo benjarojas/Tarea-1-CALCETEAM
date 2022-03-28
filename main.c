@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include "list.c"
 
@@ -145,13 +146,31 @@ void agregarCancion()
 
 
     // Creamos una lista en caso de que sea mas de 1 genero
-    // falta implementar un algoritmo para separar por comas
     fflush(stdin);
     nuevaCancion->Generos = createList();
-    printf("Ingrese el/los genero(s) de la cancion: ");
+    printf("Ingrese el/los genero(s) de la cancion separados por coma y sin espacios: ");
     scanf("%[^\n]", generos);
 
-    pushBack(nuevaCancion->Generos, generos);
+    int i = 0; // Recorre todo el string de géneros
+    while(true)
+    {
+        char *aux = (char *) malloc(30 * sizeof(char)); // Guarda un solo género
+        int k = 0; // Recorre la variable aux
+        while(generos[i] != ',' && generos[i] != '\0')
+        {
+            aux[k] = generos[i];
+            i++;
+            k++;
+        }
+        aux[k] = '\0';
+        pushBack(nuevaCancion->Generos, aux); // Se añade el género a la lista
+
+        if(generos[i] == '\0') // Fin del string
+        {
+            break;
+        }
+        i++; // Salta las comas
+    }
 
     fflush(stdin);
     printf("Ingrese el anio de la cancion: ");
@@ -302,9 +321,11 @@ void mostrarInfoCancion(Cancion *cancion)
     printf(", %d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
 }
 
-void mostrarCanciones() {
+void mostrarCanciones()
+{
     Cancion *cancion = firstList(ListaGlobalCanciones);
-    while(cancion) {
+    while(cancion)
+    {
         mostrarInfoCancion(cancion);
         cancion = nextList(ListaGlobalCanciones);
     }
