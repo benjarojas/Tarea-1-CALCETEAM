@@ -21,7 +21,10 @@ typedef struct
     ListaReproduccion* ListaReproduccion;
 } Cancion;
 
+char *get_csv_field (char * tmp, int k);
+void importarCanciones();
 void exportarCanciones(char *nombreArchivo);
+void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista);
 void agregarCancion();
 void eliminarCancion(char *nombre, char *artista, int anio);
 void mostrarListasReproduccion();
@@ -71,7 +74,9 @@ int main()
 
         switch(option)
         {
-            case 1: break;  // Importar canciones
+            case 1: 
+                importarCanciones();
+            break;  // Importar canciones
             case 2: // Exportar canciones
                 fflush(stdin);
                 printf("Ingrese el nombre del archivo: ");
@@ -129,6 +134,126 @@ int main()
     }
     
     return 0;
+}
+
+char * get_csv_field (char * tmp, int k) {
+    int open_mark = 0;
+    char* ret=(char*) malloc (100*sizeof(char));
+    int ini_i=0, i=0;
+    int j=0;
+    while(tmp[i+1]!='\0'){
+
+        if(tmp[i]== '\"'){
+            open_mark = 1-open_mark;
+            if(open_mark) ini_i = i+1;
+            i++;
+            continue;
+        }
+
+        if(open_mark || tmp[i]!= ','){
+            if(k==j) ret[i-ini_i] = tmp[i];
+            i++;
+            continue;
+        }
+
+        if(tmp[i]== ','){
+            if(k==j) {
+               ret[i-ini_i] = 0;
+               return ret;
+            }
+            j++; ini_i = i+1;
+        }
+
+        i++;
+    }
+
+    if(k==j) {
+       ret[i-ini_i] = 0;
+       return ret;
+    }
+
+    return NULL;
+}
+
+void importarCanciones()
+{
+    FILE* archivoEntrada;
+
+    archivoEntrada=fopen("Canciones.csv", "r");
+
+    if(archivoEntrada==NULL)
+    {
+        printf("ERROR AL IMPORTAR ARCHIVO CSV");
+        exit(1);
+    }
+
+    char nombre[100];
+    char artista[100];
+    List* generos=createList();
+    int anio;
+    char nombreLista[20];
+
+    char linea [1024];
+
+    while (fgets (linea, 1023, archivoEntrada) != NULL) 
+    {
+        char *aux = get_csv_field(linea, 0);
+
+        if (buscarCancionNombre(aux)==NULL);
+        {
+            for(size_t i=0;i<5;i++)
+            {
+                char *aux = get_csv_field(linea, i);
+            
+                if (i==0)
+                {
+                    strcpy(nombre, aux);     
+                }
+                else if (i==1)
+                {
+                    strcpy (artista, aux);
+                }
+                else if (i==2)
+                {
+                    pushFront(generos, aux);
+                }
+                else if (i==3)
+                {
+                    anio=atoi(aux);
+                }
+                else if (i==4)
+                {
+                    strcpy(nombreLista, aux);
+                }
+            }
+            crearCancion(nombre, artista, generos, anio, nombreLista);
+        }
+    }
+    fclose(archivoEntrada);
+}
+
+
+void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista)
+{
+    Cancion* cancionAgregada=NULL;
+
+    cancionAgregada=(Cancion*) malloc(sizeof(Cancion));
+
+    strcpy(cancionAgregada->Nombre, nombre);
+    strcpy(cancionAgregada->Artista, artista);
+    pushBack(cancionAgregada->Generos, generos);
+    cancionAgregada->Anio=anio;
+
+    ListaReproduccion *listaReproduccion = buscarListaReproduccion(nombreLista);
+    if(!listaReproduccion) // La lista no existe
+    {
+        listaReproduccion = crearListaReproduccion(nombreLista);
+    }
+
+    listaReproduccion->Cantidad++;
+    cancionAgregada->ListaReproduccion = listaReproduccion;
+    pushBack(listaReproduccion->CancionesLista, cancionAgregada);
+    pushFront(ListaGlobalCanciones, cancionAgregada);
 }
 
 void exportarCanciones(char *nombreArchivo)
