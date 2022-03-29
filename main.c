@@ -22,7 +22,7 @@ typedef struct
 } Cancion;
 
 char *get_csv_field (char * tmp, int k);
-void importarCanciones();
+void importarCanciones(char *nombreArchivo);
 void exportarCanciones(char *nombreArchivo);
 void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista);
 void agregarCancion();
@@ -56,8 +56,8 @@ int main()
 
     while(option != 11)
     {
-        printf("1.-  Importar canciones desde un archivo CSV\n");
-        printf("2.-  Exportar canciones CSV\n");
+        printf("1.-  Importar canciones desde un archivo CSV\n"); //Funcionando
+        printf("2.-  Exportar canciones CSV\n"); //Funcionando
         printf("3.-  Agregar cancion\n"); // Funcionando
         printf("4.-  Buscar cancion por nombre\n"); // Funcionando
         printf("5.-  Buscar cancion por artista\n");
@@ -74,9 +74,12 @@ int main()
 
         switch(option)
         {
-            case 1: 
-                importarCanciones();
-            break;  // Importar canciones
+            case 1:// Importar canciones
+                fflush(stdin);
+                printf("Ingrese el nombre del archivo: ");
+                scanf("%[^\n]", nombre);
+                importarCanciones(nombre);
+            break;
             case 2: // Exportar canciones
                 fflush(stdin);
                 printf("Ingrese el nombre del archivo: ");
@@ -175,11 +178,11 @@ char * get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void importarCanciones()
+void importarCanciones(char* nombreArchivo)
 {
     FILE* archivoEntrada;
 
-    archivoEntrada=fopen("Canciones.csv", "r");
+    archivoEntrada=fopen(nombreArchivo, "r");
 
     if(archivoEntrada==NULL)
     {
@@ -238,6 +241,7 @@ void crearCancion(char* nombre, char* artista, List* generos, int anio, char* no
     Cancion* cancionAgregada=NULL;
 
     cancionAgregada=(Cancion*) malloc(sizeof(Cancion));
+    cancionAgregada->Generos=createList();
 
     strcpy(cancionAgregada->Nombre, nombre);
     strcpy(cancionAgregada->Artista, artista);
