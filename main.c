@@ -240,9 +240,7 @@ void importarCanciones(char* nombreArchivo)
 
 void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista)
 {
-    Cancion* cancionAgregada = NULL;
-
-    cancionAgregada = (Cancion*) malloc(sizeof(Cancion));
+    Cancion *cancionAgregada = (Cancion*) malloc(sizeof(Cancion));
 
     strcpy(cancionAgregada->Nombre, nombre);
     strcpy(cancionAgregada->Artista, artista);
@@ -316,32 +314,23 @@ void exportarCanciones(char *nombreArchivo)
 
 void agregarCancion()
 {
-    Cancion* nuevaCancion = NULL;
-
-    char* generos = NULL;
     char nombreCancion[100];
     char artistaCancion[100];
     char nombreLista[100];
+    char generos[100];
     int anioCancion;
-
-    nuevaCancion = (Cancion *) malloc(sizeof(Cancion));
-    generos = (char *) malloc(100*sizeof(char));
+    List *listaGeneros = createList();
 
     fflush(stdin);
     printf("Ingrese el nombre de la cancion: ");
     scanf("%[^\n]", nombreCancion);
 
-    strcpy(nuevaCancion->Nombre, nombreCancion);
-
     fflush(stdin);
     printf("Ingrese el artista de la cancion: ");
     scanf("%[^\n]", artistaCancion);
 
-    strcpy(nuevaCancion->Artista, artistaCancion);
-
     // Creamos una lista en caso de que sea mas de 1 genero
     fflush(stdin);
-    nuevaCancion->Generos = createList();
     printf("Ingrese el/los genero(s) de la cancion separados por coma y sin espacios: ");
     scanf("%[^\n]", generos);
 
@@ -357,7 +346,7 @@ void agregarCancion()
             k++;
         }
         aux[k] = '\0';
-        pushBack(nuevaCancion->Generos, aux); // Se añade el género a la lista
+        pushBack(listaGeneros, aux); // Se añade el género a la lista
 
         if(generos[i] == '\0') // Fin del string
         {
@@ -370,22 +359,11 @@ void agregarCancion()
     printf("Ingrese el anio de la cancion: ");
     scanf("%d", &anioCancion);
 
-    nuevaCancion->Anio = anioCancion;
-
     fflush(stdin);
     printf("Ingrese la lista de reproducción: ");
     scanf("%[^\n]", nombreLista);
 
-    ListaReproduccion *listaReproduccion = buscarListaReproduccion(nombreLista);
-    if(!listaReproduccion) // La lista no existe
-    {
-        listaReproduccion = crearListaReproduccion(nombreLista);
-    }
-
-    listaReproduccion->Cantidad++;
-    nuevaCancion->ListaReproduccion = listaReproduccion;
-    pushBack(listaReproduccion->CancionesLista, nuevaCancion);
-    pushFront(ListaGlobalCanciones, nuevaCancion);
+    crearCancion(nombreCancion, artistaCancion, listaGeneros, anioCancion, nombreLista);
     printf("\n");
 }
 
