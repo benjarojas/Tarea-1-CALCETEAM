@@ -28,6 +28,8 @@ void mostrarListasReproduccion();
 void mostrarCancionesPorLista(char *nombre);
 void mostrarInfoCancion(Cancion *cancion);
 void mostrarCanciones();
+void buscarArtista();
+void buscarGenero();
 
 ListaReproduccion *buscarListaReproduccion(char *nombre);
 ListaReproduccion *crearListaReproduccion(char *nombre);
@@ -92,8 +94,12 @@ int main()
                     printf("No se encontro la cancion\n");
                 }
                 break;  // Buscar por nombre
-            case 5: break;  // Buscar por artista
-            case 6: break;  // Buscar por genero
+            case 5:  // Buscar por artista 
+            buscarArtista();
+            break;
+            case 6:  // Buscar por genero
+            buscarGenero();
+            break;
             case 7: // Eliminar cancion
                 printf("Ingrese el nombre de la cancion: ");
                 scanf("%[^\n]", nombre);
@@ -389,4 +395,66 @@ void mostrarCanciones()
         cancion = nextList(ListaGlobalCanciones);
     }
     printf("\n");
+}
+
+void buscarArtista()
+{
+    char artista [30];
+    int cont = 0;
+ 
+    List *listaCanciones = ListaGlobalCanciones;
+    Cancion *cancion = firstList(listaCanciones);
+ 
+    printf("Ingrese nombre del artista: ");
+    scanf("%[^\n]", &artista);
+ 
+    while(cancion)
+    {
+        if(strcmp(cancion->Artista, artista) == 0)
+        {
+            mostrarInfoCancion(cancion);
+            cont = 1;
+        }
+        cancion = nextList(listaCanciones);
+    }
+ 
+    if (cont == 0)
+    {
+        printf("No hay una cancion del artista ingresado\n");
+    }
+}
+ 
+void buscarGenero()
+{
+    char genero_ [30];
+    int cont = 0;
+ 
+    List *listaCanciones = ListaGlobalCanciones;
+    Cancion *cancion = firstList(listaCanciones);
+ 
+    printf("Ingrese nombre del genero: ");
+    scanf("%[^\n]", &genero_);
+ 
+    while(listaCanciones){
+ 
+        List *listaGeneros = cancion->Generos;
+        char *genero = firstList(listaGeneros);
+ 
+        while(listaGeneros)
+        {
+            if(strcmp(genero, genero_) == 0){
+                mostrarInfoCancion(cancion);
+                cont = 1;
+            }
+            
+            genero = nextList(listaGeneros);
+        }
+ 
+        cancion = nextList(listaCanciones);
+    }
+
+    if(cont == 0)
+    {
+        printf("No hay una cancion del genero ingresado\n");
+    }
 }
