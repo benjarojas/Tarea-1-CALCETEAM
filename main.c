@@ -14,8 +14,8 @@ typedef struct
 
 typedef struct 
 {
-    char Nombre [100];
-    char Artista [100];
+    char Nombre[100];
+    char Artista[100];
     List* Generos;
     int Anio;
     ListaReproduccion* ListaReproduccion;
@@ -182,71 +182,72 @@ void importarCanciones(char* nombreArchivo)
 {
     FILE* archivoEntrada;
 
-    archivoEntrada=fopen(nombreArchivo, "r");
+    archivoEntrada = fopen(nombreArchivo, "r");
 
-    if(archivoEntrada==NULL)
+    if(archivoEntrada == NULL)
     {
         printf("ERROR AL IMPORTAR ARCHIVO CSV");
         exit(1);
     }
 
-    char nombre[100];
-    char artista[100];
-    List* generos=createList();
-    int anio;
-    char nombreLista[20];
-
-    char linea [1024];
+    char linea[1024];
 
     while (fgets (linea, 1023, archivoEntrada) != NULL) 
     {
-        char *aux = get_csv_field(linea, 0);
+        char *nombre = get_csv_field(linea, 0);
+        char *artista = get_csv_field(linea, 1);
+        int anio = atoi(get_csv_field(linea, 3));
+        char *nombreLista = get_csv_field(linea, 4);
 
-        if (buscarCancionNombre(aux)==NULL);
+        char *strGeneros = get_csv_field(linea, 2);
+        List *listaGeneros = createList();
+        int i = 0;
+
+        while(true)
         {
-            for(size_t i=0;i<5;i++)
+            char *genero = (char *) malloc(30 * sizeof(genero));
+            int k = 0;
+            while(strGeneros[i] != ',' && strGeneros[i] != '\0')
             {
-                char *aux = get_csv_field(linea, i);
-            
-                if (i==0)
+                genero[k] = strGeneros[i];
+                i++;
+                k++;
+            }
+
+            genero[k] = '\0';
+            pushBack(listaGeneros, genero);
+
+            if(strGeneros[i] == ',')
+            {
+                i++; // Salta la coma
+                if(strGeneros[i] == ' ')
                 {
-                    strcpy(nombre, aux);     
-                }
-                else if (i==1)
-                {
-                    strcpy (artista, aux);
-                }
-                else if (i==2)
-                {
-                    pushFront(generos, aux);
-                }
-                else if (i==3)
-                {
-                    anio=atoi(aux);
-                }
-                else if (i==4)
-                {
-                    strcpy(nombreLista, aux);
+                    i++; // Salta el espacio después de la coma
                 }
             }
-            crearCancion(nombre, artista, generos, anio, nombreLista);
+            else
+            {
+                break; // Fin de la lista
+            }
         }
-    }
-    fclose(archivoEntrada);
-}
 
+        crearCancion(nombre, artista, listaGeneros, anio, nombreLista);
+    }
+
+    fclose(archivoEntrada);
+    printf("\n");
+}
 
 void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista)
 {
-    Cancion* cancionAgregada=NULL;
+    Cancion* cancionAgregada = NULL;
 
-    cancionAgregada=(Cancion*) malloc(sizeof(Cancion));
-    cancionAgregada->Generos=createList();
+    cancionAgregada = (Cancion*) malloc(sizeof(Cancion));
 
     strcpy(cancionAgregada->Nombre, nombre);
     strcpy(cancionAgregada->Artista, artista);
-    pushBack(cancionAgregada->Generos, generos);
-    cancionAgregada->Anio=anio;
+    cancionAgregada->Generos = generos;
+    cancionAgregada->Anio = anio;
 
     ListaReproduccion *listaReproduccion = buscarListaReproduccion(nombreLista);
     if(!listaReproduccion) // La lista no existe
@@ -257,7 +258,7 @@ void crearCancion(char* nombre, char* artista, List* generos, int anio, char* no
     listaReproduccion->Cantidad++;
     cancionAgregada->ListaReproduccion = listaReproduccion;
     pushBack(listaReproduccion->CancionesLista, cancionAgregada);
-    pushFront(ListaGlobalCanciones, cancionAgregada);
+    pushBack(ListaGlobalCanciones, cancionAgregada);
 }
 
 void exportarCanciones(char *nombreArchivo)
@@ -296,7 +297,7 @@ void exportarCanciones(char *nombreArchivo)
             char copiaGeneros[100];
             strcpy(copiaGeneros, "\"");
             strcat(copiaGeneros, generos);
-            strcat(copiaGeneros, "\"\0");
+            strcat(copiaGeneros, "\"");
             fprintf(archivo, "%s, ", copiaGeneros);
         }
         else
@@ -337,7 +338,6 @@ void agregarCancion()
     scanf("%[^\n]", artistaCancion);
 
     strcpy(nuevaCancion->Artista, artistaCancion);
-
 
     // Creamos una lista en caso de que sea mas de 1 genero
     fflush(stdin);
@@ -535,8 +535,8 @@ void buscarArtista()
     Cancion *cancion = firstList(listaCanciones);
  
     printf("Ingrese nombre del artista: ");
-    scanf("%[^\n]", &artista);
- 
+    scanf("%[^\n]", artista);
+
     while(cancion)
     {
         if(strcmp(cancion->Artista, artista) == 0)
