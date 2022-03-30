@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include "list.h"
+#include "list.c"
 
 typedef struct
 {
@@ -139,40 +140,43 @@ int main()
     return 0;
 }
 
-char * get_csv_field (char * tmp, int k) {
-    int open_mark = 0;
-    char* ret=(char*) malloc (100*sizeof(char));
-    int ini_i=0, i=0;
-    int j=0;
-    while(tmp[i+1]!='\0'){
+char *get_csv_field(char *linea, int indice)
+{
+    char *campo = (char *) malloc(100 * sizeof(char *)); // Guarda el string a retornar
+    int i = 0; // Recorre la linea
+    int k = 0; // Cuenta las comas
+    int n = 0; // Recorre el campo
+    bool comillas = false;
 
-        if(tmp[i]== '\"'){
-            open_mark = 1-open_mark;
-            if(open_mark) ini_i = i+1;
-            i++;
-            continue;
+    while(linea[i] != '\0')
+    {
+        if(linea[i] == '\"')
+        {
+            comillas = !comillas;
         }
 
-        if(open_mark || tmp[i]!= ','){
-            if(k==j) ret[i-ini_i] = tmp[i];
-            i++;
-            continue;
-        }
-
-        if(tmp[i]== ','){
-            if(k==j) {
-               ret[i-ini_i] = 0;
-               return ret;
+        if(k == indice)
+        {
+            if(linea[i] != '\"')
+            {
+                campo[n] = linea[i];
+                n++;
             }
-            j++; ini_i = i+1;
         }
 
         i++;
-    }
 
-    if(k==j) {
-       ret[i-ini_i] = 0;
-       return ret;
+        if(linea[i] == ',' && !comillas)
+        {
+            k++;
+            i++;
+        }
+
+        if(k > indice || linea[i] == '\0' || linea[i] == '\n')
+        {
+            campo[n] = '\0';
+            return campo;
+        }
     }
 
     return NULL;
