@@ -31,6 +31,7 @@ void mostrarListasReproduccion();
 void mostrarCancionesPorLista(char *nombre);
 void mostrarInfoCancion(Cancion *cancion);
 void mostrarCanciones();
+void buscarCancionNombre(char *nombre);
 void buscarArtista();
 void buscarGenero();
 
@@ -38,7 +39,6 @@ ListaReproduccion *buscarListaReproduccion(char *nombre);
 ListaReproduccion *crearListaReproduccion(char *nombre);
 
 Cancion *buscarCancion(char *nombreCancion, char *artista, int anio, char *nombreLista);
-Cancion* buscarCancionNombre(char *nombre);
 
 List *ListaGlobalCanciones;
 List *ListaGlobalListasReproduccion;
@@ -95,13 +95,6 @@ int main()
                 printf("Ingrese el nombre de la cancion: ");
                 scanf("%[^\n]", nombre);
                 buscarCancionNombre(nombre);
-                if(resultadoBusqueda != NULL)
-                {
-                    printf("Cancion encontrada: \n");
-                    mostrarInfoCancion(resultadoBusqueda);
-                } else {
-                    printf("No se encontro la cancion\n");
-                }
                 break;  // Buscar por nombre
             case 5:  // Buscar por artista 
             buscarArtista();
@@ -303,11 +296,11 @@ void exportarCanciones(char *nombreArchivo)
             strcpy(copiaGeneros, "\"");
             strcat(copiaGeneros, generos);
             strcat(copiaGeneros, "\"");
-            fprintf(archivo, "%s, ", copiaGeneros);
+            fprintf(archivo, "%s,", copiaGeneros);
         }
         else
         {
-            fprintf(archivo, "%s, ", generos);
+            fprintf(archivo, "%s,", generos);
         }
 
         fprintf(archivo, "%d,%s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
@@ -394,20 +387,6 @@ Cancion* buscarCancion(char *nombreCancion, char *artista, int anio, char *nombr
             return cancion;
         }
         cancion = nextList(ListaGlobalCanciones);        
-    }
-    return NULL;
-}
-
-Cancion* buscarCancionNombre(char *nombre)
-{
-    Cancion *aux = firstList(ListaGlobalCanciones); 
-    while(aux != NULL)
-    {
-        if(strcmp(aux->Nombre, nombre) == 0)
-        {
-            return aux;
-        }
-        aux = nextList(ListaGlobalCanciones);
     }
     return NULL;
 }
@@ -539,9 +518,30 @@ void mostrarCanciones()
     printf("\n");
 }
 
+void buscarCancionNombre(char *nombre)
+{
+    int contador = 0;
+    Cancion *cancion = firstList(ListaGlobalCanciones); 
+    while(cancion != NULL)
+    {
+        if(strcmp(cancion->Nombre, nombre) == 0)
+        {
+            mostrarInfoCancion(cancion);
+            contador++;
+        }
+        cancion = nextList(ListaGlobalCanciones);
+    }
+
+    if(contador == 0) // La canción ingresada no existe
+    {
+        printf("No se encontraron canciones\n");
+    }
+    printf("\n");
+}
+
 void buscarArtista()
 {
-    char artista [30];
+    char artista[30];
     int cont = 0;
  
     List *listaCanciones = ListaGlobalCanciones;
