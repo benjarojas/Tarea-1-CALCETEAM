@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include "list.h"
-#include "list.c"
 
 typedef struct
 {
@@ -533,32 +532,34 @@ void buscarArtista()
     {
         printf("No hay una cancion del artista ingresado\n");
     }
+    printf("\n");
 }
  
 void buscarGenero()
 {
-    char genero_ [30];
+    char genero[30];
     int cont = 0;
  
     List *listaCanciones = ListaGlobalCanciones;
     Cancion *cancion = firstList(listaCanciones);
  
     printf("Ingrese nombre del genero: ");
-    scanf("%[^\n]", &genero_);
+    scanf("%[^\n]", genero);
  
-    while(listaCanciones){
- 
+    while(cancion)
+    {
         List *listaGeneros = cancion->Generos;
-        char *genero = firstList(listaGeneros);
+        char *aux = firstList(listaGeneros);
  
-        while(listaGeneros)
+        while(aux)
         {
-            if(strcmp(genero, genero_) == 0){
+            if(strcmp(genero, aux) == 0)
+            {
                 mostrarInfoCancion(cancion);
                 cont = 1;
             }
             
-            genero = nextList(listaGeneros);
+            aux = nextList(listaGeneros);
         }
  
         cancion = nextList(listaCanciones);
@@ -568,4 +569,5 @@ void buscarGenero()
     {
         printf("No hay una cancion del genero ingresado\n");
     }
+    printf("\n");
 }
