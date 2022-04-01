@@ -132,9 +132,6 @@ void * popCurrent(List * list) {
         
     list->current = aux->prev;
 
-
-
-    
     free(aux);
     
     return data;
@@ -146,4 +143,11 @@ void cleanList(List * list) {
     while (list->head != NULL) {
         popFront(list);
     }
+}
+
+void * getCurrent(List * list) {
+    if(list->current) {
+        return list->current->data;
+    }
+    return NULL;
 }

@@ -27,6 +27,8 @@ void * popCurrent(List * list);
 
 void cleanList(List * list);
 
+void * getCurrent(List * list);
+
 #endif /* List_h */
 
 

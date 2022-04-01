@@ -94,7 +94,7 @@ int main()
                 fflush(stdin);
                 printf("Ingrese el nombre de la cancion: ");
                 scanf("%[^\n]", nombre);
-                resultadoBusqueda = buscarCancionNombre(nombre);
+                buscarCancionNombre(nombre);
                 if(resultadoBusqueda != NULL)
                 {
                     printf("Cancion encontrada: \n");
@@ -278,7 +278,7 @@ void exportarCanciones(char *nombreArchivo)
     Cancion *cancion = firstList(ListaGlobalCanciones);
     while(cancion)
     {
-        fprintf(archivo, "%s, %s, ", cancion->Nombre, cancion->Artista);
+        fprintf(archivo, "%s,%s,", cancion->Nombre, cancion->Artista);
 
         List *listaGeneros = cancion->Generos;
         char generos[100];
@@ -310,7 +310,7 @@ void exportarCanciones(char *nombreArchivo)
             fprintf(archivo, "%s, ", generos);
         }
 
-        fprintf(archivo, "%d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
+        fprintf(archivo, "%d,%s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
 
         cancion = nextList(ListaGlobalCanciones);
     }
@@ -439,28 +439,32 @@ ListaReproduccion *crearListaReproduccion(char *nombre)
 void eliminarCancion(char *nombre, char *artista, int anio)
 {
     int contador = 0;
-    Cancion *cancion = firstList(ListaGlobalCanciones);
+    Cancion *cancion = lastList(ListaGlobalCanciones);
     while(cancion)
     {
         if(strcmp(cancion->Nombre, nombre) == 0 && strcmp(cancion->Artista, artista) == 0 && cancion->Anio == anio)
         {
             ListaReproduccion *listaReproduccion = cancion->ListaReproduccion;
             List *listaCanciones = listaReproduccion->CancionesLista;
-            Cancion *aux = firstList(listaCanciones);
+            Cancion *aux = lastList(listaCanciones);
             while(aux)
             {
                 if(aux == cancion)
                 {
-                    popCurrent(ListaGlobalCanciones);
+                    popCurrent(ListaGlobalCanciones); // Elimina el current y mueve el puntero al nodo anterior
                     popCurrent(listaCanciones);
+                    cancion = getCurrent(ListaGlobalCanciones); // Actualiza la variable con el nodo actual
                     listaReproduccion->Cantidad--;
                     contador++;
                     break;
                 }
-                aux = nextList(listaCanciones);
+                aux = prevList(listaCanciones);
             }
         }
-        cancion = nextList(ListaGlobalCanciones);
+        else
+        {
+            cancion = prevList(ListaGlobalCanciones);
+        }
     }
 
     if(contador == 0) // La canción ingresada no existe
