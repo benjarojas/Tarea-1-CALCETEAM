@@ -37,7 +37,7 @@ void buscarGenero();
 ListaReproduccion *buscarListaReproduccion(char *nombre);
 ListaReproduccion *crearListaReproduccion(char *nombre);
 
-Cancion *buscarCancion(char *nombre, char *artista, int anio);
+Cancion *buscarCancion(char *nombreCancion, char *artista, int anio, char *nombreLista);
 Cancion* buscarCancionNombre(char *nombre);
 
 List *ListaGlobalCanciones;
@@ -235,7 +235,10 @@ void importarCanciones(char* nombreArchivo)
             }
         }
 
-        crearCancion(nombre, artista, listaGeneros, anio, nombreLista);
+        if(!buscarCancion(nombre, artista, anio, nombreLista))
+        {
+            crearCancion(nombre, artista, listaGeneros, anio, nombreLista);
+        }
     }
 
     fclose(archivoEntrada);
@@ -367,9 +370,8 @@ void agregarCancion()
     printf("Ingrese la lista de reproducción: ");
     scanf("%[^\n]", nombreLista);
 
-    Cancion *cancion = buscarCancion(nombreCancion, artistaCancion, anioCancion);
     // Se agrega la canción solo si no existe o si la lista de reproducción es distinta a la actual
-    if(!cancion || (cancion && strcmp(cancion->ListaReproduccion->NombreLista, nombreLista)) != 0)
+    if(!buscarCancion(nombreCancion, artistaCancion, anioCancion, nombreLista))
     {
         crearCancion(nombreCancion, artistaCancion, listaGeneros, anioCancion, nombreLista);
     }
@@ -381,12 +383,13 @@ void agregarCancion()
 }
 
 // Busca la canción específica según los datos ingresados
-Cancion* buscarCancion(char *nombre, char *artista, int anio)
+Cancion* buscarCancion(char *nombreCancion, char *artista, int anio, char *nombreLista)
 {
     Cancion *cancion = firstList(ListaGlobalCanciones);
     while(cancion)
     {
-        if(strcmp(cancion->Nombre, nombre) == 0 && strcmp(cancion->Artista, artista) == 0 && cancion->Anio == anio)
+        if(strcmp(cancion->Nombre, nombreCancion) == 0 && strcmp(cancion->Artista, artista) == 0
+           && cancion->Anio == anio && strcmp(cancion->ListaReproduccion->NombreLista, nombreLista) == 0)
         {
             return cancion;
         }
