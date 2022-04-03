@@ -183,8 +183,8 @@ void importarCanciones(char* nombreArchivo)
 
     if(archivoEntrada == NULL)
     {
-        printf("ERROR AL IMPORTAR ARCHIVO CSV");
-        exit(1);
+        printf("Error al importar archivo .csv");
+        exit(EXIT_FAILURE);
     }
 
     char linea[1024];
@@ -314,51 +314,58 @@ void exportarCanciones(char *nombreArchivo)
 
 void agregarCancion()
 {
+    // Creamos variables para recibir los datos de entrada
     char nombreCancion[100];
     char artistaCancion[100];
     char nombreLista[100];
     char generos[100];
     int anioCancion;
+
+    // Creamos una lista de generos en caso de que la nueva canción tenga mas de uno
     List *listaGeneros = createList();
 
+    // Limpiamos el buffer de stdin y leemos nombre
     fflush(stdin);
     printf("Ingrese el nombre de la cancion: ");
     scanf("%[^\n]", nombreCancion);
 
+    // Limpiamos el buffer de stdin y leemos artista
     fflush(stdin);
     printf("Ingrese el artista de la cancion: ");
     scanf("%[^\n]", artistaCancion);
 
-    // Creamos una lista en caso de que sea mas de 1 genero
+    // Limpiamos el buffer de stdin y leemos los generos separados por comas
     fflush(stdin);
     printf("Ingrese el/los genero(s) de la cancion separados por coma y sin espacios: ");
     scanf("%[^\n]", generos);
 
-    int i = 0; // Recorre todo el string de géneros
+    // Recorre todo el string de géneros
+    int i = 0; 
     while(true)
     {
-        char *aux = (char *) malloc(30 * sizeof(char)); // Guarda un solo género
+        char *aux = (char *) malloc(30 * sizeof(char)); // Creamos un string auxiliar para cada genero
         int k = 0; // Recorre la variable aux
+        // Mientras el elemento actual no sea NULL o una coma
         while(generos[i] != ',' && generos[i] != '\0')
         {
-            aux[k] = generos[i];
+            aux[k] = generos[i]; // Copiamos caracter a caracter
             i++;
             k++;
         }
-        aux[k] = '\0';
-        pushBack(listaGeneros, aux); // Se añade el género a la lista
+        aux[k] = '\0'; // Insertamos el carácter NULL (fin del string)
+        pushBack(listaGeneros, aux); // Se añade el género al final de la lista
 
-        if(generos[i] == '\0') // Fin del string
-        {
-            break;
-        }
+        // Si llegamos al carácter NULL
+        if(generos[i] == '\0') break;
         i++; // Salta las comas
     }
 
+    // Limpiamos el buffer stdin y leemos el año
     fflush(stdin);
     printf("Ingrese el año de la cancion: ");
     scanf("%d", &anioCancion);
 
+    // Limpiamos el buffer stdin y leemos el nombre de la lista
     fflush(stdin);
     printf("Ingrese la lista de reproducción: ");
     scanf("%[^\n]", nombreLista);
@@ -538,18 +545,22 @@ void mostrarCanciones()
     }
 }
 
+// Buscar una canción según su nombre
 void buscarCancionNombre(char *nombre)
 {
-    int contador = 0;
+    int contador = 0; // Contador en caso de que exista más de una canción con ese nombre
+    // Creamos un puntero hacia un tipo canción para recorrer la lista
     Cancion *cancion = firstList(ListaGlobalCanciones); 
-    while(cancion != NULL)
+    while(cancion != NULL) // Si no hemos llegado al final de la lista
     {
+        // Si encontramos una canción con ese nombre
         if(strcmp(cancion->Nombre, nombre) == 0)
         {
+            // Mostramos la canción por pantalla
             mostrarInfoCancion(cancion);
-            contador++;
+            contador++; // Aumentamos el contador
         }
-        cancion = nextList(ListaGlobalCanciones);
+        cancion = nextList(ListaGlobalCanciones); // Siguiente nodo de la lista
     }
 
     if(contador == 0) // La canción ingresada no existe
