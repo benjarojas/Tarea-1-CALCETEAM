@@ -575,22 +575,22 @@ void buscarArtista()
     int cont = 0;
  
     List *listaCanciones = ListaGlobalCanciones;
-    Cancion *cancion = firstList(listaCanciones);
+    Cancion *cancion = firstList(listaCanciones); // Inicializo cancion en la primera posicion de la lista global
  
     printf("Ingrese nombre del artista: ");
-    scanf("%[^\n]", artista);
+    scanf("%[^\n]", artista); // Se guarda el nombre del artista
 
-    while(cancion)
+    while(cancion) // Se recorre la lista de canciones
     {
-        if(strcmp(cancion->Artista, artista) == 0)
+        if(strcmp(cancion->Artista, artista) == 0) // se compara el nombre del artista con el de la cancion
         {
-            mostrarInfoCancion(cancion);
+            mostrarInfoCancion(cancion); // Mostramos info de canción por pantalla
             cont = 1;
         }
-        cancion = nextList(listaCanciones);
+        cancion = nextList(listaCanciones); // Se avanza a la siguiente canción
     }
  
-    if (cont == 0)
+    if (cont == 0) // En caso de que el artista no exista
     {
         printf("No hay una cancion del artista ingresado\n\n");
     }
