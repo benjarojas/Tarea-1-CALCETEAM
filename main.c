@@ -455,11 +455,18 @@ void eliminarCancion(char *nombre, char *artista, int anio)
 
 void mostrarListasReproduccion()
 {
+    int contador = 0;
     ListaReproduccion *listaReproduccion = firstList(ListaGlobalListasReproduccion);
     while(listaReproduccion)
     {
+        contador++;
         printf("%s, %zd\n", listaReproduccion->NombreLista, listaReproduccion->Cantidad);
         listaReproduccion = nextList(ListaGlobalListasReproduccion);
+    }
+
+    if(contador == 0)
+    {
+        printf("No hay listas de reproducción para mostrar.\n");
     }
     printf("\n");
 }
@@ -487,35 +494,48 @@ void mostrarCancionesPorLista(char *nombre)
 
     if(contador == 0) // La lista no existe
     {
-        printf("No se encontró la lista de reproducción\n");
+        printf("No se encontró la lista de reproducción\n\n");
     }
-    printf("\n");
 }
 
 void mostrarInfoCancion(Cancion *cancion)
 {
-    printf("%s, %s,", cancion->Nombre, cancion->Artista);
+    printf("Nombre: %s\n", cancion->Nombre);
+    printf("Artista: %s\n", cancion->Artista);
+    printf("Generos: ");
 
     List *listaGeneros = cancion->Generos;
     char *genero = firstList(listaGeneros);
     while(genero)
     {
-        printf(" %s", genero);
+        printf("%s", genero);
         genero = nextList(listaGeneros);
+
+        if(genero)
+        {
+            printf(", ");
+        }
     }
 
-    printf(", %d, %s\n", cancion->Anio, cancion->ListaReproduccion->NombreLista);
+    printf("\nAño: %d\n", cancion->Anio);
+    printf("Lista de Reproducción: %s\n\n", cancion->ListaReproduccion->NombreLista);
 }
 
 void mostrarCanciones()
 {
+    int contador = 0;
     Cancion *cancion = firstList(ListaGlobalCanciones);
     while(cancion)
     {
         mostrarInfoCancion(cancion);
+        contador++;
         cancion = nextList(ListaGlobalCanciones);
     }
-    printf("\n");
+
+    if(contador == 0)
+    {
+        printf("No hay canciones para mostrar.\n\n");
+    }
 }
 
 void buscarCancionNombre(char *nombre)
