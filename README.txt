@@ -18,4 +18,4 @@
   - Victor Granda: 
 
 4) Puntos de premio/castigo a cada integrante:
-- No incluimos puntos de premio/castigo ya que concluímos cada integrante trabajó bien y cumplió con las tareas acordadas entre todos.
+  - No incluimos puntos de premio/castigo ya que concluímos cada integrante trabajó bien y cumplió con las tareas acordadas entre todos.
