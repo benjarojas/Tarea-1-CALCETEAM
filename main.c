@@ -356,7 +356,7 @@ void agregarCancion()
     }
 
     fflush(stdin);
-    printf("Ingrese el anio de la cancion: ");
+    printf("Ingrese el año de la cancion: ");
     scanf("%d", &anioCancion);
 
     fflush(stdin);
@@ -370,7 +370,7 @@ void agregarCancion()
     }
     else
     {
-        printf("La canción ingresada ya existe.\n");
+        printf("La canción ingresada ya existe en la lista de reproducción.\n");
     }
     printf("\n");
 }
@@ -459,16 +459,16 @@ void mostrarListasReproduccion()
     ListaReproduccion *listaReproduccion = firstList(ListaGlobalListasReproduccion);
     while(listaReproduccion)
     {
+        printf("Nombre de la lista: %s\n", listaReproduccion->NombreLista);
+        printf("Cantidad de canciones: %zd\n\n", listaReproduccion->Cantidad);
         contador++;
-        printf("%s, %zd\n", listaReproduccion->NombreLista, listaReproduccion->Cantidad);
         listaReproduccion = nextList(ListaGlobalListasReproduccion);
     }
 
     if(contador == 0)
     {
-        printf("No hay listas de reproducción para mostrar.\n");
+        printf("No hay listas de reproducción para mostrar.\n\n");
     }
-    printf("\n");
 }
 
 void mostrarCancionesPorLista(char *nombre)
@@ -554,9 +554,8 @@ void buscarCancionNombre(char *nombre)
 
     if(contador == 0) // La canción ingresada no existe
     {
-        printf("No se encontraron canciones\n");
+        printf("No se encontraron canciones\n\n");
     }
-    printf("\n");
 }
 
 void buscarArtista()
@@ -582,9 +581,8 @@ void buscarArtista()
  
     if (cont == 0)
     {
-        printf("No hay una cancion del artista ingresado\n");
+        printf("No hay una cancion del artista ingresado\n\n");
     }
-    printf("\n");
 }
  
 void buscarGenero()
@@ -619,7 +617,6 @@ void buscarGenero()
 
     if(cont == 0)
     {
-        printf("No hay una cancion del genero ingresado\n");
+        printf("No hay una cancion del genero ingresado\n\n");
     }
-    printf("\n");
 }
