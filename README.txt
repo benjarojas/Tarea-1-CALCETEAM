@@ -15,7 +15,7 @@
   - Oscar Rojas: Proactivo, responsable, gran dominio de los contenidos, buena disposición para ayudar al resto y solucionar problemas.
   - Benjamin Rojas: Responsable, gran dominio de los contenidos, buena actitud al participar y ayudar al grupo con dudas.
   - Ramiro Magnatera: Responsable, buen dominio de los temas y habilidades, buena disposición a la realización de tareas.
-  - Victor Granda: 
+  - Victor Granda: Proactivo, especialmente a la hora de organizar y coordinar el trabajo en equipo. Participativo y demuestra el dominio en los contenidos.
 
 4) Puntos de premio/castigo a cada integrante:
   - No incluimos puntos de premio/castigo ya que concluímos cada integrante trabajó bien y cumplió con las tareas acordadas entre todos.
