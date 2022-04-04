@@ -1,6 +1,6 @@
 1) Cómo compilar y ejecutar la tarea:
   - La tarea debe ser compilada desde un terminal bash utilizando el siguiente comando:
-    gcc -g main.c list.c -o main
+    gcc main.c list.c -o main
   - Se debe ejecutar con el siguiente comando desde un terminal bash:
     ./main.exe
 
