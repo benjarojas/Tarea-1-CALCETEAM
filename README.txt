@@ -12,9 +12,9 @@
     Esto se intentó solucionar importado librerías como locale.h y windows.h pero no se obtuvieron resultados positivos.
 
 3) Coevaluación:
-  - Oscar Rojas:
-  - Benjamin Rojas
-  - Ramiro Magnatera:
+  - Oscar Rojas: Proactivo, responsable, gran dominio de los contenidos, buena disposición para ayudar al resto y solucionar problemas.
+  - Benjamin Rojas: Responsable, gran dominio de los contenidos, buena actitud al participar y ayudar al grupo con dudas.
+  - Ramiro Magnatera: Responsable, buen dominio de los temas y habilidades, buena disposición a la realización de tareas.
   - Victor Granda: 
 
 4) Puntos de premio/castigo a cada integrante:

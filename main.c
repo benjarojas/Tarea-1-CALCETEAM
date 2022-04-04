@@ -191,6 +191,7 @@ void importarCanciones(char* nombreArchivo)
 
     while (fgets (linea, 1023, archivoEntrada) != NULL) 
     {
+        // Se guardan los datos según el campo que se recibe
         char *nombre = get_csv_field(linea, 0);
         char *artista = get_csv_field(linea, 1);
         int anio = atoi(get_csv_field(linea, 3));
@@ -230,7 +231,7 @@ void importarCanciones(char* nombreArchivo)
 
         if(!buscarCancion(nombre, artista, anio, nombreLista)) // Se verifica que la canción no exista previamente
         {
-            crearCancion(nombre, artista, listaGeneros, anio, nombreLista);
+            crearCancion(nombre, artista, listaGeneros, anio, nombreLista); // Se crea una variable tipo canción con los datos recopilados
         }
     }
 
@@ -240,8 +241,9 @@ void importarCanciones(char* nombreArchivo)
 
 void crearCancion(char* nombre, char* artista, List* generos, int anio, char* nombreLista)
 {
-    Cancion *cancionAgregada = (Cancion*) malloc(sizeof(Cancion));
+    Cancion *cancionAgregada = (Cancion*) malloc(sizeof(Cancion)); // Reserva de memoria de variable tipo cancion
 
+    //Se copia cada dato en los campos del registro
     strcpy(cancionAgregada->Nombre, nombre);
     strcpy(cancionAgregada->Artista, artista);
     cancionAgregada->Generos = generos;
@@ -250,25 +252,25 @@ void crearCancion(char* nombre, char* artista, List* generos, int anio, char* no
     ListaReproduccion *listaReproduccion = buscarListaReproduccion(nombreLista);
     if(!listaReproduccion) // La lista no existe
     {
-        listaReproduccion = crearListaReproduccion(nombreLista);
+        listaReproduccion = crearListaReproduccion(nombreLista); // Se crea lista de reproducción
     }
 
     listaReproduccion->Cantidad++;
-    cancionAgregada->ListaReproduccion = listaReproduccion;
-    pushBack(listaReproduccion->CancionesLista, cancionAgregada);
-    pushBack(ListaGlobalCanciones, cancionAgregada);
+    cancionAgregada->ListaReproduccion = listaReproduccion; 
+    pushBack(listaReproduccion->CancionesLista, cancionAgregada); // Se agrega canción a lista correspondiente
+    pushBack(ListaGlobalCanciones, cancionAgregada); // Se agrega canción a lista global de canciones
 }
 
 void exportarCanciones(char *nombreArchivo)
 {
-    FILE *archivo = fopen(nombreArchivo, "w");
+    FILE *archivo = fopen(nombreArchivo, "w"); 
     if(!archivo)
     {
         printf("No se pudo crear el archivo\n");
         return;
     }
 
-    Cancion *cancion = firstList(ListaGlobalCanciones);
+    Cancion *cancion = firstList(ListaGlobalCanciones); 
     while(cancion)
     {
         fprintf(archivo, "%s,%s,", cancion->Nombre, cancion->Artista);
